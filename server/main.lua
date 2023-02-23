@@ -158,7 +158,7 @@ local function AddItem(source, item, amount, slot, info)
 	local totalWeight = GetTotalWeight(Player.PlayerData.items)
 	local itemInfo = QBCore.Shared.Items[item:lower()]
 	if not itemInfo and not Player.Offline then
-		QBCore.Functions.Notify(source, "Item does not exist", 'error')
+		QBCore.Functions.Notify(source, Lang:t("notify.idne"), "error")
 		return false
 	end
 
@@ -204,7 +204,7 @@ local function AddItem(source, item, amount, slot, info)
 			end
 		end
 	elseif not Player.Offline then
-		QBCore.Functions.Notify(source, "Inventory too full", 'error')
+		QBCore.Functions.Notify(source, Lang:t("notify.giymif"), "error")
 	end
 	return false
 end
@@ -2073,7 +2073,7 @@ RegisterNetEvent('inventory:server:SetInventoryData', function(fromInventory, to
 				exports['qb-traphouse']:AddHouseItem(traphouseId, toSlot, itemInfo["name"], fromAmount, fromItemData.info, src)
 			end
 		else
-			QBCore.Functions.Notify(src, "Item doesn't exist??", "error")
+			QBCore.Functions.Notify(src, Lang:t("notify.idne"), "error")
 		end
 	elseif QBCore.Shared.SplitStr(fromInventory, "-")[1] == "itemshop" then
 		local shopType = QBCore.Shared.SplitStr(fromInventory, "-")[2]
@@ -2090,7 +2090,7 @@ RegisterNetEvent('inventory:server:SetInventoryData', function(fromInventory, to
 					itemData.info.quality = 100
 					AddItem(src, itemData.name, 1, toSlot, itemData.info)
 					TriggerClientEvent('qb-drugs:client:updateDealerItems', src, itemData, 1)
-					QBCore.Functions.Notify(src, itemInfo["label"] .. " bought!", "success")
+					QBCore.Functions.Notify(src, itemInfo["label"] .. " " .. Lang:t("notify.bought") .. "!", "success")
 					TriggerEvent("qb-log:server:CreateLog", "dealers", "Dealer item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
 				else
 					QBCore.Functions.Notify(src, Lang:t("notify.notencash"), "error")
@@ -2099,10 +2099,10 @@ RegisterNetEvent('inventory:server:SetInventoryData', function(fromInventory, to
 				if Player.Functions.RemoveMoney("cash", price, "dealer-item-bought") then
 					AddItem(src, itemData.name, fromAmount, toSlot, itemData.info)
 					TriggerClientEvent('qb-drugs:client:updateDealerItems', src, itemData, fromAmount)
-					QBCore.Functions.Notify(src, itemInfo["label"] .. " bought!", "success")
+					QBCore.Functions.Notify(src, itemInfo["label"] .. " " .. Lang:t("notify.bought") .. "!", "success")
 					TriggerEvent("qb-log:server:CreateLog", "dealers", "Dealer item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. "  for $"..price)
 				else
-					QBCore.Functions.Notify(src, "You don't have enough cash..", "error")
+					QBCore.Functions.Notify(src, Lang:t("notify.notencash"), "error")
 				end
 			end
 		elseif QBCore.Shared.SplitStr(shopType, "_")[1] == "Itemshop" then
@@ -2113,7 +2113,7 @@ RegisterNetEvent('inventory:server:SetInventoryData', function(fromInventory, to
                 end
 				AddItem(src, itemData.name, fromAmount, toSlot, itemData.info)
 				TriggerClientEvent('qb-shops:client:UpdateShop', src, QBCore.Shared.SplitStr(shopType, "_")[2], itemData, fromAmount)
-				QBCore.Functions.Notify(src, itemInfo["label"] .. " bought!", "success")
+				QBCore.Functions.Notify(src, itemInfo["label"] .. " " .. Lang:t("notify.bought") .. "!", "success")
 				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
 			elseif bankBalance >= price then
 				Player.Functions.RemoveMoney("bank", price, "itemshop-bought-item")
@@ -2123,20 +2123,20 @@ RegisterNetEvent('inventory:server:SetInventoryData', function(fromInventory, to
                 end
 				AddItem(src, itemData.name, fromAmount, toSlot, itemData.info)
 				TriggerClientEvent('qb-shops:client:UpdateShop', src, QBCore.Shared.SplitStr(shopType, "_")[2], itemData, fromAmount)
-				QBCore.Functions.Notify(src, itemInfo["label"] .. " bought!", "success")
+				QBCore.Functions.Notify(src, itemInfo["label"] .. " " .. Lang:t("notify.bought") .. "!", "success")
 				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
 			else
-				QBCore.Functions.Notify(src, "You don't have enough cash..", "error")
+				QBCore.Functions.Notify(src, Lang:t("notify.notencash"), "error")
 			end
 		else
 			if Player.Functions.RemoveMoney("cash", price, "unkown-itemshop-bought-item") then
 				AddItem(src, itemData.name, fromAmount, toSlot, itemData.info)
-				QBCore.Functions.Notify(src, itemInfo["label"] .. " bought!", "success")
+				QBCore.Functions.Notify(src, itemInfo["label"] .. " " .. Lang:t("notify.bought") .. "!", "success")
 				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
 			elseif bankBalance >= price then
 				Player.Functions.RemoveMoney("bank", price, "unkown-itemshop-bought-item")
 				AddItem(src, itemData.name, fromAmount, toSlot, itemData.info)
-				QBCore.Functions.Notify(src, itemInfo["label"] .. " bought!", "success")
+				QBCore.Functions.Notify(src, itemInfo["label"] .. " " .. Lang:t("notify.bought") .. "!", "success")
 				TriggerEvent("qb-log:server:CreateLog", "shops", "Shop item bought", "green", "**"..GetPlayerName(src) .. "** bought a " .. itemInfo["label"] .. " for $"..price)
 			else
 				QBCore.Functions.Notify(src, Lang:t("notify.notencash"), "error")
@@ -2209,7 +2209,7 @@ RegisterNetEvent('inventory:server:SetInventoryData', function(fromInventory, to
 				end
 			end
 		else
-			QBCore.Functions.Notify(src, "Item doesn't exist??", "error")
+			QBCore.Functions.Notify(src, Lang:t("notify.idne"), "error")
 		end
 	end
 end)
@@ -2422,7 +2422,7 @@ QBCore.Commands.Add('clearinv', 'Clear Players Inventory (Admin Only)', { { name
     if Player then
         ClearInventory(playerId)
     else
-        QBCore.Functions.Notify(source, "Player not online", 'error')
+        QBCore.Functions.Notify(source,  Lang:t("notify.pdne"), "error")
     end
 end, 'admin')
 
